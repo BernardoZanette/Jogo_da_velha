@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    flex-direction: column;
+    width: min-content;
+}
+.linha {
+    display: flex;
+    flex-direction: row;
+    border-bottom: solid 1px black;
+}
+.casa {
+    font-size: 20px;
+    padding: 4px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+.linha:nth-child(3) {
+    border-bottom: none;
+}
+.casa:nth-child(1), .casa:nth-child(2) {
+    border-right: solid 1px black;
+}
