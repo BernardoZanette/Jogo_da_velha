@@ -1,7 +1,22 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+}
 body {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.bord {
+    display: flex;
+    flex-direction: column;
     width: min-content;
+    margin-bottom: 23%;
+}
+.desfoque {
+    filter: blur(3px);
 }
 .linha {
     display: flex;
@@ -9,10 +24,10 @@ body {
     border-bottom: solid 1px black;
 }
 .casa {
-    font-size: 20px;
+    font-size: 70px;
     padding: 4px;
-    width: 20px;
-    height: 20px;
+    width: 90px;
+    height: 90px;
     text-align: center;
 }
 .linha:nth-child(3) {
@@ -20,4 +35,49 @@ body {
 }
 .casa:nth-child(1), .casa:nth-child(2) {
     border-right: solid 1px black;
+}
+
+/* AVISO INICIAL */
+#aviso {
+    position: absolute;
+    top: 20%;
+    z-index: 1;
+}
+#div_aviso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#botao_aviso {
+    color: white;
+    background-color: rgb(30, 204, 99);
+    height: min-content;
+    width: min-content;
+    border: none;
+    border-radius: 60px;
+    padding: 10px;
+    padding-inline: 60px;
+    font-size: 50px;
+    text-align: center;
+}
+#h1_aviso {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 60px;
+}
+
+/* Dinâmica pós-click */
+.hide {
+    display: none;
+}
+
+/*Nave*/
+#div_nave {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#jogador1, #jogador2 {
+    width: 130px;
+    height: 130px;
 }

@@ -7,21 +7,38 @@
     <link rel="stylesheet" href="style.css">
     <title>Jogo da Velha</title>
 </head>
-<body class="bord">
-    <div class="linha">
-        <div class="casa" id="casa0"></div>
-        <div class="casa" id="casa1"></div>
-        <div class="casa" id="casa2"></div>
+<body>
+    <div id="aviso">
+        <div id="div_aviso">
+            <div>
+                <h1 id="h1_aviso">Jogo da Velha</h1>
+            </div>
+            <div>
+                <button id="botao_aviso">Play</button>
+            </div>
+        </div>
     </div>
-    <div class="linha">
-        <div class="casa" id="casa3"></div>
-        <div class="casa" id="casa4"></div>
-        <div class="casa" id="casa5"></div>
-    </div>
-    <div class="linha">
-        <div class="casa" id="casa6"></div>
-        <div class="casa" id="casa7"></div>
-        <div class="casa" id="casa8"></div>
+    <div class="game desfoque">
+        <div class="bord">
+            <div class="linha">
+                <div class="casa" id="casa0"></div>
+                <div class="casa" id="casa1"></div>
+                <div class="casa" id="casa2"></div>
+            </div>
+            <div class="linha">
+                <div class="casa" id="casa3"></div>
+                <div class="casa" id="casa4"></div>
+                <div class="casa" id="casa5"></div>
+            </div>
+            <div class="linha">
+                <div class="casa" id="casa6"></div>
+                <div class="casa" id="casa7"></div>
+                <div class="casa" id="casa8"></div>
+            </div>
+        </div>
+        <div id="div_nave">
+            <img src="jogador1.png" id="jogador1">
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
