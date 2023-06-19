@@ -14,7 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     width: min-content;
-    margin-bottom: 23%;
+    margin-bottom: 40%;
 }
 .desfoque {
     filter: blur(3px);
@@ -37,6 +37,11 @@ body {
 }
 .casa:nth-child(1), .casa:nth-child(2) {
     border-right: solid 4px rgb(255, 255, 255);
+}
+
+.game {
+    width: max-content;
+    height: max-content;
 }
 
 /* AVISO INICIAL */
@@ -85,13 +90,14 @@ body {
     margin-right: 20px;
 }
 
-/* Dinâmica pós-click */
+/* Dinâmica pós-click do play*/
 .hide {
     display: none;
 }
 
 /*Nave*/
 #div_nave {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,4 +105,10 @@ body {
 #jogador{
     width: 130px;
     height: 130px;
+}
+
+/*Tiros*/
+
+.tiro {
+    position: absolute;
 }
