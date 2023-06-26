@@ -15,8 +15,11 @@ let jogador_img = document.getElementById('jogador')
 let jogador_div = document.getElementById('div_nave')
 
 let tiro = document.getElementsByClassName('tiro')[0]
+tiro.classList.add('good_beam')
 
 let vitoria = false
+
+let atirando = false
 
 const ops_vitoria = [
     [0, 1, 2],
@@ -29,6 +32,8 @@ const ops_vitoria = [
     [2, 4, 6]
 ]
 
+let jogadas = 0
+
 const posicoes = {
     right: 100,
     left: 100,
@@ -36,30 +41,33 @@ const posicoes = {
     top: 100,
     bottom: 100
 }
+
+let casaAtual
 // ---------- 
 
 // Funções iniciais
-
+const pre_criacao_mensagem = () => {
+    jogador_img.style.margin = '0px'
+    vitoria = true
+    board.setAttribute('class', 'desfoque')
+    container_aviso.classList.remove('hide')
+    container_aviso.innerHTML = ''
+}
 const verificarVitoria = () => {
     ops_vitoria.forEach(ops => {
         let div1 = document.getElementById(`casa${ops[0]}`)
         let div2 = document.getElementById(`casa${ops[1]}`)
         let div3 = document.getElementById(`casa${ops[2]}`)
         if (
-            div1.innerHTML != '' &&
-            div2.innerHTML != '' &&
-            div3.innerHTML != ''
+            div1.className == 'casa adicionado' &&
+            div2.className == 'casa adicionado' &&
+            div3.className == 'casa adicionado'
         ) {
             if (
-                div1.innerHTML == div2.innerHTML &&
-                div2.innerHTML == div3.innerHTML
+                (div1.innerHTML == div2.innerHTML
+                && div2.innerHTML == div3.innerHTML)
             ) {
-                jogador_img.style.margin = '0px'
-                vitoria = true
-                // alert('Você venceu')
-                board.setAttribute('class', 'desfoque')
-                container_aviso.classList.remove('hide')
-                container_aviso.innerHTML = ''
+                pre_criacao_mensagem()
                 const mensagem_venceu = document.createElement('div')
                 mensagem_venceu.innerHTML = !jogador ? '<img src="assets/jogador1.png" class="icones" id="icone_vitoria"> venceu!' : '<img src="assets/jogador2.png" class="icones" id="icone_vitoria">venceu!'
                 mensagem_venceu.setAttribute('id', 'mensagem_venceu')
@@ -67,24 +75,33 @@ const verificarVitoria = () => {
                 jogador_div.style.inset = '0px'
             }
         }
+        if (jogadas == 8) {
+            if (vitoria) return
+            pre_criacao_mensagem()
+            const mensagem_venceu = document.createElement('div')
+            mensagem_venceu.innerHTML = 'Empate!'
+            mensagem_venceu.setAttribute('id', 'mensagem_venceu')
+            container_aviso.appendChild(mensagem_venceu)
+            jogador_div.style.inset = '0px'
+        }
     });
 }
 
 const adicionarValor = (casa_definitiva) => {
     if (vitoria) return;
     casa_definitiva.classList.remove('pre_click')
-    casa_definitiva.innerHTML = ''
-    casa_definitiva.innerHTML = jogador ? '<img src="assets/X_icon.png" class="icones">' : '<img src="assets/O_icon.png" class="icones">'
+    // casa_definitiva.innerHTML = ''
+    // casa_definitiva.innerHTML = jogador ? '<img src="assets/X_icon.png" class="icones">' : '<img src="assets/O_icon.png" class="icones">'
     jogador = !jogador
     jogador ? jogador_img.src = 'assets/jogador1.png' : jogador_img.src = 'assets/jogador2.png'
     casa_definitiva.classList.add('adicionado')
     verificarVitoria()
 }
 
-const adicionarValorTemporario = (casa_atual) => {
+const adicionarValorTemporario = (casa) => {
     if (vitoria) return;
-    casa_atual.classList.add('pre_click')
-    casa_atual.innerHTML = jogador ? '<img src="assets/X_icon_temp.png" class="icones">' : '<img src="assets/O_icon_temp.png" class="icones">'
+    casa.classList.add('pre_click')
+    casa.innerHTML = jogador ? '<img src="assets/X_icon_temp.png" class="icones">' : '<img src="assets/O_icon_temp.png" class="icones">'
 }
 
 // ----------
@@ -170,14 +187,13 @@ const moveJogador = (posicao) => {
 const movement = (linha, coluna) => {
     if (vitoria) return;
     document.addEventListener('keydown', (event) => {
+        if (atirando) return;
         var tecla = event.key;
         if (tecla == 'Enter') {
-            // console.log(matriz_posicoes[linha][coluna].className)
             // ajeitar variável
-            const casaAtual = matriz_posicoes[linha][coluna]
-            if (casaAtual.className == 'casa adicionado') return
+            casaAtual = matriz_posicoes[linha][coluna]
+            if (casaAtual.classList.contains('adicionado')) return
             animarTiro(jogador_div.getBoundingClientRect(), casaAtual.getBoundingClientRect(), tiro)
-            adicionarValor(casaAtual)
             return;
         }
         for (const casa of casas) {
@@ -216,31 +232,42 @@ const movement = (linha, coluna) => {
 }
 
 function animarTiro(posicao_from, posicao_to, element) {
-    console.log(posicao_from, posicao_to, element)
+    atirando = true
     // const newspaperSpinning = [
     //     {top: posicao_from.top },
     //     { transform: "rotate(360deg) scale(0)" },
     // ];
-    console.log('Largura nave: ' + posicao_from.width)
-    console.log('Largura tiro: ' + tiro.width)
-    console.log('Top nave: ' + posicao_from.top)
     const laserAnimation = [
         {
             top: `${posicao_from.top}px`,
-            left: `${(posicao_from.left + posicao_from.width/2 - tiro.width/2) }px`,
+            left: `${(posicao_from.left + posicao_from.width / 2 - tiro.width / 2)}px`,
             visibility: 'visible'
         },
         {
             top: `${posicao_to.top}px`,
-            left: `${(posicao_from.left + posicao_from.width/2 - tiro.width/2) }px`,
+            left: `${(posicao_from.left + posicao_from.width / 2 - tiro.width / 2)}px`,
             visibility: 'hidden'
         },
     ];
     const laserTiming = {
-        duration: 200,
+        duration: 250,
         iterations: 1,
     };
     let anim = element.animate(laserAnimation, laserTiming)
-    anim.onfinish = (event) => { element.style.visibility = "hidden" }
+    anim.onfinish = () => {
+        element.style.visibility = 'hidden' 
+        adicionarValor(casaAtual)
+        invertTiro()
+        atirando = false
+        jogadas++
+    }
+}
 
+const invertTiro = () => {
+    if (tiro.classList.contains('good_beam')) {
+        tiro.classList.remove('good_beam')
+    }
+    else {
+        tiro.classList.add('good_beam')
+    }
 }

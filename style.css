@@ -114,3 +114,15 @@ body {
     position: absolute;
     z-index: -1;
 }
+
+/* Classe do valor adicionado ao tabuleiro */
+
+.adicionado {
+    filter: brightness(0) invert(1);
+}
+
+/* Alteração entre tiros/lasers */
+
+.good_beam {
+    filter: hue-rotate(100deg) brightness(2);
+}
