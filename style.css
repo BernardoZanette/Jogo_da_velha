@@ -10,7 +10,7 @@ body {
     height: 100vh;
     background-image: url('fundo.jpg');
 }
-.bord {
+.board {
     display: flex;
     flex-direction: column;
     width: min-content;
@@ -110,5 +110,7 @@ body {
 /*Tiros*/
 
 .tiro {
+    visibility: hidden;
     position: absolute;
+    z-index: -1;
 }

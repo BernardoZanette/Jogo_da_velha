@@ -8,9 +8,9 @@ const casas = document.getElementsByClassName('casa')
 
 const container_aviso = document.getElementById('aviso')
 
-const bord = document.getElementsByClassName('game')[0]
+const board = document.getElementsByClassName('game')[0]
 
-let jogador = true 
+let jogador = true
 let jogador_img = document.getElementById('jogador')
 let jogador_div = document.getElementById('div_nave')
 
@@ -19,14 +19,14 @@ let tiro = document.getElementsByClassName('tiro')[0]
 let vitoria = false
 
 const ops_vitoria = [
-    [0,1,2],
-    [3,4,5],
-    [6,7,8],
-    [0,3,6],
-    [1,4,7],
-    [2,5,8],
-    [0,4,8],
-    [2,4,6]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
 ]
 
 const posicoes = {
@@ -34,7 +34,7 @@ const posicoes = {
     left: 100,
     middle: 0,
     top: 100,
-    bottom: 100 
+    bottom: 100
 }
 // ---------- 
 
@@ -46,8 +46,8 @@ const verificarVitoria = () => {
         let div2 = document.getElementById(`casa${ops[1]}`)
         let div3 = document.getElementById(`casa${ops[2]}`)
         if (
-            div1.innerHTML != '' && 
-            div2.innerHTML != '' && 
+            div1.innerHTML != '' &&
+            div2.innerHTML != '' &&
             div3.innerHTML != ''
         ) {
             if (
@@ -55,9 +55,9 @@ const verificarVitoria = () => {
                 div2.innerHTML == div3.innerHTML
             ) {
                 jogador_img.style.margin = '0px'
-                vitoria = true 
+                vitoria = true
                 // alert('Você venceu')
-                bord.setAttribute('class', 'desfoque')
+                board.setAttribute('class', 'desfoque')
                 container_aviso.classList.remove('hide')
                 container_aviso.innerHTML = ''
                 const mensagem_venceu = document.createElement('div')
@@ -72,7 +72,7 @@ const verificarVitoria = () => {
 
 const adicionarValor = (casa_definitiva) => {
     if (vitoria) return;
-    casa_definitiva.classList.remove('pre_click') 
+    casa_definitiva.classList.remove('pre_click')
     casa_definitiva.innerHTML = ''
     casa_definitiva.innerHTML = jogador ? '<img src="assets/X_icon.png" class="icones">' : '<img src="assets/O_icon.png" class="icones">'
     jogador = !jogador
@@ -92,7 +92,7 @@ const adicionarValorTemporario = (casa_atual) => {
 
 let linha = 0
 let coluna = 0
-var matriz_posicoes = [[],[],[]]
+var matriz_posicoes = [[], [], []]
 for (const casa of casas) {
     // console.log(casa)
     matriz_posicoes[linha][coluna] = casa
@@ -114,11 +114,11 @@ var posicao_atual = {
 start.addEventListener('click', () => {
     container_aviso.setAttribute('class', 'hide')
 
-    bord.classList.remove('desfoque')
+    board.classList.remove('desfoque')
 
     matriz_posicoes[1][1].classList.add("pre_click")
     matriz_posicoes[1][1].innerHTML = '<img src="assets/X_icon_temp.png" class="icones">'
-    movement(1,1)
+    movement(1, 1)
 })
 
 const moveJogador = (posicao) => {
@@ -142,7 +142,7 @@ const moveJogador = (posicao) => {
             break;
     }
     switch (posicao_atual.top) {
-        case 0: 
+        case 0:
             jogador_div.style.top = null
             jogador_div.style.bottom = null
             break
@@ -154,7 +154,7 @@ const moveJogador = (posicao) => {
             break
     }
     switch (posicao_atual.right) {
-        case 0: 
+        case 0:
             jogador_div.style.right = null
             jogador_div.style.left = null
             break
@@ -176,8 +176,8 @@ const movement = (linha, coluna) => {
             // ajeitar variável
             const casaAtual = matriz_posicoes[linha][coluna]
             if (casaAtual.className == 'casa adicionado') return
-            adicionarValor(casaAtual)
             animarTiro(jogador_div.getBoundingClientRect(), casaAtual.getBoundingClientRect(), tiro)
+            adicionarValor(casaAtual)
             return;
         }
         for (const casa of casas) {
@@ -211,25 +211,36 @@ const movement = (linha, coluna) => {
                 break;
         }
         if (matriz_posicoes[linha][coluna].innerHTML != '') return;
-        adicionarValorTemporario(matriz_posicoes[linha][coluna])     
+        adicionarValorTemporario(matriz_posicoes[linha][coluna])
     });
 }
 
-function animarTiro (posicao_from, posicao_to, element) {
+function animarTiro(posicao_from, posicao_to, element) {
     console.log(posicao_from, posicao_to, element)
     // const newspaperSpinning = [
     //     {top: posicao_from.top },
     //     { transform: "rotate(360deg) scale(0)" },
     // ];
-    const newspaperSpinning = [
-        {  top:`${posicao_from.top}px`,
-        right:`${posicao_from.right}px`},
-        {  top:`${posicao_to.top}px`,
-        right:`${posicao_to.right}px`},
-      ];
-    const newspaperTiming = {
+    console.log('Largura nave: ' + posicao_from.width)
+    console.log('Largura tiro: ' + tiro.width)
+    console.log('Top nave: ' + posicao_from.top)
+    const laserAnimation = [
+        {
+            top: `${posicao_from.top}px`,
+            left: `${(posicao_from.left + posicao_from.width/2 - tiro.width/2) }px`,
+            visibility: 'visible'
+        },
+        {
+            top: `${posicao_to.top}px`,
+            left: `${(posicao_from.left + posicao_from.width/2 - tiro.width/2) }px`,
+            visibility: 'hidden'
+        },
+    ];
+    const laserTiming = {
         duration: 200,
         iterations: 1,
-      };
-    element.animate(newspaperSpinning, newspaperTiming)   
+    };
+    let anim = element.animate(laserAnimation, laserTiming)
+    anim.onfinish = (event) => { element.style.visibility = "hidden" }
+
 }
