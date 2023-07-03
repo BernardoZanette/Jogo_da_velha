@@ -17,6 +17,9 @@ let jogador_div = document.getElementById('div_nave')
 let tiro = document.getElementsByClassName('tiro')[0]
 tiro.classList.add('good_beam')
 
+let mira = document.getElementsByClassName('mira')[0]
+mira.classList.add('good_aim')
+
 let vitoria = false
 
 let atirando = false
@@ -59,9 +62,9 @@ const verificarVitoria = () => {
         let div2 = document.getElementById(`casa${ops[1]}`)
         let div3 = document.getElementById(`casa${ops[2]}`)
         if (
-            div1.className == 'casa adicionado' &&
-            div2.className == 'casa adicionado' &&
-            div3.className == 'casa adicionado'
+            div1.classList.contains('adicionado') &&
+            div2.classList.contains('adicionado') &&
+            div3.classList.contains('adicionado')
         ) {
             if (
                 (div1.innerHTML == div2.innerHTML
@@ -69,7 +72,7 @@ const verificarVitoria = () => {
             ) {
                 pre_criacao_mensagem()
                 const mensagem_venceu = document.createElement('div')
-                mensagem_venceu.innerHTML = !jogador ? '<img src="assets/jogador1.png" class="icones" id="icone_vitoria"> venceu!' : '<img src="assets/jogador2.png" class="icones" id="icone_vitoria">venceu!'
+                mensagem_venceu.innerHTML = !jogador ? '<img src="assets/jogador1.png" class="icones" id="icone_vitoria"> <span>venceu!</span>' : '<img src="assets/jogador2.png" class="icones" id="icone_vitoria"><span>venceu!</span>'
                 mensagem_venceu.setAttribute('id', 'mensagem_venceu')
                 container_aviso.appendChild(mensagem_venceu)
                 jogador_div.style.inset = '0px'
@@ -95,6 +98,15 @@ const adicionarValor = (casa_definitiva) => {
     jogador = !jogador
     jogador ? jogador_img.src = 'assets/jogador1.png' : jogador_img.src = 'assets/jogador2.png'
     casa_definitiva.classList.add('adicionado')
+    if (!jogador) {
+        mira.classList.remove('good_aim')
+        mira.classList.add('bad_aim')
+        casa_definitiva.classList.remove('good_mark')
+    }
+    else {
+        mira.classList.add('good_aim')
+        mira.classList.remove('bad_aim')
+    }
     verificarVitoria()
 }
 
@@ -133,8 +145,14 @@ start.addEventListener('click', () => {
 
     board.classList.remove('desfoque')
 
-    matriz_posicoes[1][1].classList.add("pre_click")
-    matriz_posicoes[1][1].innerHTML = '<img src="assets/X_icon_temp.png" class="icones">'
+    let casa_inicial = matriz_posicoes[1][1]
+    casa_inicial.classList.add("pre_click")
+    casa_inicial.innerHTML = '<img src="assets/X_icon_temp.png" class="icones">'
+    casa_inicial_posicoes = casa_inicial.getBoundingClientRect()
+    mira.style.visibility = 'visible'
+    mira.style.left = ((casa_inicial_posicoes.left + casa_inicial_posicoes.width/2 - mira.width/2)+'px')
+    mira.style.top = ((casa_inicial_posicoes.top + casa_inicial_posicoes.height/2 - mira.height/2)+'px')
+    casa_inicial.classList.add('good_mark')
     movement(1, 1)
 })
 
@@ -197,9 +215,13 @@ const movement = (linha, coluna) => {
             return;
         }
         for (const casa of casas) {
-            if (casa.className == 'casa pre_click') {
+            if (casa.classList.contains('pre_click')) {
                 casa.classList.remove('pre_click')
                 casa.innerHTML = ''
+            }
+            if (casa.classList.contains('movement_class')) {
+                casa.classList.remove('movement_class')
+                casa.classList.remove('good_mark')
             }
         }
         console.log(`Key pressed ${tecla}`);
@@ -226,12 +248,19 @@ const movement = (linha, coluna) => {
                 if (linha > 2) linha = 2
                 break;
         }
+
+        casa_movement = matriz_posicoes[linha][coluna]
+        let posicoes_casa_atual = casa_movement.getBoundingClientRect()
+        mira.style.left = (posicoes_casa_atual.left + posicoes_casa_atual.width/2 - mira.width/2)+'px'
+        mira.style.top = (posicoes_casa_atual.top + posicoes_casa_atual.height/2 - mira.height/2)+'px'
+        
         if (matriz_posicoes[linha][coluna].innerHTML != '') return;
         adicionarValorTemporario(matriz_posicoes[linha][coluna])
     });
 }
 
 function animarTiro(posicao_from, posicao_to, element) {
+    if (vitoria) return;
     atirando = true
     // const newspaperSpinning = [
     //     {top: posicao_from.top },
