@@ -67,6 +67,7 @@ body {
     font-size: 50px;
     text-align: center;
 }
+
 #h1_aviso {
     text-align: center;
     margin-bottom: 50px;
@@ -93,7 +94,7 @@ body {
 
 /* Dinâmica pós-click do play*/
 .hide {
-    display: none;
+    display: none !important;
 }
 
 /*Nave*/
@@ -116,12 +117,6 @@ body {
     z-index: -1;
 }
 
-/* Classe do valor adicionado ao tabuleiro */
-
-.adicionado {
-    filter: brightness(0) invert(1);
-}
-
 /* Alteração entre tiros/lasers */
 
 .good_beam {
@@ -137,9 +132,4 @@ body {
 
 .good_aim {
     filter: hue-rotate(100deg) brightness(2);
-}
-
-.good_mark {
-    filter: hue-rotate(100deg) brightness(2);
-    opacity: 0.6;
 }

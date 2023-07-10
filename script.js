@@ -73,9 +73,13 @@ const verificarVitoria = () => {
                 pre_criacao_mensagem()
                 const mensagem_venceu = document.createElement('div')
                 mensagem_venceu.innerHTML = !jogador ? '<img src="assets/jogador1.png" class="icones" id="icone_vitoria"> <span>venceu!</span>' : '<img src="assets/jogador2.png" class="icones" id="icone_vitoria"><span>venceu!</span>'
+                if (jogador) {
+                    mensagem_venceu.style.color = 'red'
+                }
                 mensagem_venceu.setAttribute('id', 'mensagem_venceu')
                 container_aviso.appendChild(mensagem_venceu)
                 jogador_div.style.inset = '0px'
+                mira.style.visibility = 'hidden'
             }
         }
         if (jogadas == 8) {
@@ -101,7 +105,6 @@ const adicionarValor = (casa_definitiva) => {
     if (!jogador) {
         mira.classList.remove('good_aim')
         mira.classList.add('bad_aim')
-        casa_definitiva.classList.remove('good_mark')
     }
     else {
         mira.classList.add('good_aim')
@@ -152,7 +155,6 @@ start.addEventListener('click', () => {
     mira.style.visibility = 'visible'
     mira.style.left = ((casa_inicial_posicoes.left + casa_inicial_posicoes.width/2 - mira.width/2)+'px')
     mira.style.top = ((casa_inicial_posicoes.top + casa_inicial_posicoes.height/2 - mira.height/2)+'px')
-    casa_inicial.classList.add('good_mark')
     movement(1, 1)
 })
 
@@ -219,10 +221,6 @@ const movement = (linha, coluna) => {
                 casa.classList.remove('pre_click')
                 casa.innerHTML = ''
             }
-            if (casa.classList.contains('movement_class')) {
-                casa.classList.remove('movement_class')
-                casa.classList.remove('good_mark')
-            }
         }
         console.log(`Key pressed ${tecla}`);
 
@@ -250,6 +248,7 @@ const movement = (linha, coluna) => {
         }
 
         casa_movement = matriz_posicoes[linha][coluna]
+        if (vitoria) return;
         let posicoes_casa_atual = casa_movement.getBoundingClientRect()
         mira.style.left = (posicoes_casa_atual.left + posicoes_casa_atual.width/2 - mira.width/2)+'px'
         mira.style.top = (posicoes_casa_atual.top + posicoes_casa_atual.height/2 - mira.height/2)+'px'
